@@ -1,0 +1,28 @@
+/* public/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .App {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  h1 {
+    color: #333;
+  }
+  
+  .league-widget {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .mini-map {
+    margin-top: 20px;
+  }

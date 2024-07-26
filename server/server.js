@@ -1,9 +1,15 @@
+const express = require('express');
+const cors = require('cors');
+const apiRoutes = require('./routes/api');
 require('dotenv').config();
-const app = require('./app');
-const config = require('./config/config');
 
-const PORT = config.port || 3000;
+const app = express();
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.use(cors());
+app.use(express.json());
+
+// Use the API routes
+app.use('/api', apiRoutes);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

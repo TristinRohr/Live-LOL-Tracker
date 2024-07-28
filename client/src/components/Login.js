@@ -1,41 +1,30 @@
 import React, { useState } from 'react';
 
-const Login = ({ setGameName, setTagLine }) => {
-  const [gameName, setLocalGameName] = useState('');
-  const [tagLine, setLocalTagLine] = useState('');
+const Login = ({ setRiotId }) => {
+  const [gameName, setGameName] = useState('');
+  const [tagLine, setTagLine] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Logging in with Riot ID: ${gameName}#${tagLine}`);
-    setGameName(gameName);
-    setTagLine(tagLine);
+    setRiotId(`${gameName}#${tagLine}`);
   };
 
   return (
-    <div>
-      <h2>Enter Riot ID</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="gameName">Summoners Name:</label>
-          <input
-            type="text"
-            id="gameName"
-            value={gameName}
-            onChange={(e) => setLocalGameName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="tagLine">Tag Line:</label>
-          <input
-            type="text"
-            id="tagLine"
-            value={tagLine}
-            onChange={(e) => setLocalTagLine(e.target.value)}
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Game Name"
+        value={gameName}
+        onChange={(e) => setGameName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Tag Line"
+        value={tagLine}
+        onChange={(e) => setTagLine(e.target.value)}
+      />
+      <button type="submit">Login</button>
+    </form>
   );
 };
 

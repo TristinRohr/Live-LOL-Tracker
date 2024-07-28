@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
-import UserStats from './components/UserStats';
-import LiveMatch from './components/LiveMatch';
 import Login from './components/Login';
-import './App.css';
+import UserStats from './components/UserStats';
 
-const App = () => {
-  const [gameName, setGameName] = useState('');
-  const [tagLine, setTagLine] = useState('');
+function App() {
+  const [riotId, setRiotId] = useState(null);
 
   return (
     <div className="App">
-      {!gameName || !tagLine ? (
-        <Login setGameName={setGameName} setTagLine={setTagLine} />
+      {!riotId ? (
+        <Login setRiotId={setRiotId} />
       ) : (
-        <div>
-          <UserStats gameName={gameName} tagLine={tagLine} />
-          <LiveMatch gameName={gameName} tagLine={tagLine} />
-        </div>
+        <UserStats riotId={riotId} />
       )}
     </div>
   );
-};
+}
 
 export default App;

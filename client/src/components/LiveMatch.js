@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const LiveMatch = ({ gameName, tagLine }) => {
-  const [matchData, setMatchData] = useState(null);
+const LiveMatch = ({ riotId }) => {
+  const [liveMatch, setLiveMatch] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchMatchData = async () => {
+    const fetchLiveMatch = async () => {
       try {
-        console.log(`Fetching live match for: ${gameName}#${tagLine}`);
-        const result = await axios.get(`http://localhost:3001/api/live-match/${gameName}/${tagLine}`);
-        console.log('Fetched live match data:', result.data);
-        setMatchData(result.data);
+        const [gameName, tagLine] = riotId.split('#');
+        const response = await axios.get(`/api/live-match/${gameName}/${tagLine}`);
+        setLiveMatch(response.data);
       } catch (error) {
-        console.error("Error fetching live match data:", error);
+        setError('Failed to fetch live match data');
       }
     };
-    fetchMatchData();
-  }, [gameName, tagLine]);
+
+    fetchLiveMatch();
+  }, [riotId]);
+
+  if (error) return <div>{error}</div>;
+  if (!liveMatch) return <div>Loading...</div>;
 
   return (
     <div>
-      <h2>Live Match for {`${gameName}#${tagLine}`}</h2>
-      {matchData ? (
-        <pre>{JSON.stringify(matchData, null, 2)}</pre>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <h2>Live Match</h2>
+      <pre>{JSON.stringify(liveMatch, null, 2)}</pre>
     </div>
   );
 };

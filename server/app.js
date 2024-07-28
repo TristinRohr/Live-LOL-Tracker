@@ -1,13 +1,15 @@
 const express = require('express');
-const path = require('path');
-const apiRoutes = require('./routes/api');
-const errorHandler = require('./middlewares/errorHandler');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const api = require('./api');
+require('dotenv').config();
 
 const app = express();
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '../client/build')));
-app.use('/api', apiRoutes);
-app.use(errorHandler);
+app.use(cors());
+app.use(bodyParser.json());
 
-module.exports = app;
+app.use('/api', api);
+
+const port = process.env.PORT || 3001;
+app.listen(port, () => console.log(`Server running on port ${port}`));

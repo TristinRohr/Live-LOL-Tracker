@@ -91,36 +91,19 @@ exports.getUserStats = async (req, res) => {
   }
 };
 
-// exports.getLiveMatch = async (req, res) => {
-//     const { gameName, tagLine } = req.params;
-  
-//     try {
-//       const puuid = await riotApiService.fetchPuuidByRiotId(gameName, tagLine);
-//       const liveMatchData = await riotApiService.fetchLiveMatchData(puuid);
-//       res.json(liveMatchData);
-//     } catch (error) {
-//       if (error.message.includes('404')) {
-//         console.error('No live match data found:', error);
-//         res.status(200).json({ message: 'No live game found' });
-//       } else {
-//         console.error('Error fetching live match data:', error);
-//         res.status(500).json({ error: 'Failed to fetch live match data' });
-//       }
-//     }
-//   };
+exports.getLiveMatch = async (req, res) => {
+  const { gameName, tagLine } = req.params;
 
-exports.getLiveClientData = async (req, res) => {
   try {
-    const response = await axios.get('https://127.0.0.1:2999/liveclientdata/allgamedata', {
-      headers: {
-        'Accept': 'application/json'
-      },
-      httpsAgent: new (require('https')).Agent({ rejectUnauthorized: false })
-    });
-
-    res.json(response.data);
+    const puuid = await riotApiService.fetchPuuidByRiotId(gameName, tagLine);
+    const liveMatchData = await riotApiService.fetchLiveClientData(); // Use fetchLiveClientData for live client data
+    res.json(liveMatchData);
   } catch (error) {
-    console.error('Error fetching live client data:', error.message);
-    res.status(500).json({ error: 'Failed to fetch live client data' });
+    if (error.response && error.response.status === 404) {
+      res.status(404).json({ message: 'No live match found' });
+    } else {
+      console.error('Error fetching live match data:', error);
+      res.status(500).json({ error: 'Failed to fetch live match data' });
+    }
   }
 };

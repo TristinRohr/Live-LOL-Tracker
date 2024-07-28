@@ -10,7 +10,11 @@ const UserStats = ({ riotId }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        if (!riotId) throw new Error('Riot ID is required');
+
         const [gameName, tagLine] = riotId.split('#');
+        if (!gameName || !tagLine) throw new Error('Invalid Riot ID format');
+
         console.log('Fetching stats for:', riotId);
         const statsResponse = await axios.get(`http://localhost:3001/api/user-stats/${gameName}/${tagLine}`);
         console.log('Fetched user stats:', statsResponse.data);
@@ -22,10 +26,14 @@ const UserStats = ({ riotId }) => {
         setMatchHistory(matchHistoryResponse.data);
 
         console.log('Fetching live game data');
-        const liveGameResponse = await axios.get(`http://localhost:3001/api/live-client-data`);
-        console.log('Fetched live game data:', liveGameResponse.data);
-        setLiveGameData(liveGameResponse.data);
-
+        try {
+          const liveGameResponse = await axios.get(`http://localhost:3001/api/live-client-data`);
+          console.log('Fetched live game data:', liveGameResponse.data);
+          setLiveGameData(liveGameResponse.data);
+        } catch (liveError) {
+          console.error('Error fetching live game data:', liveError);
+          setLiveGameData(null); // No live game found
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to fetch data');

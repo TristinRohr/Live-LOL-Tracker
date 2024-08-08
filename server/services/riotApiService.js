@@ -102,20 +102,20 @@ exports.fetchMatchDetails = async (matchId) => {
   return match;
 };
 
-// exports.fetchLiveMatchData = async (puuid) => {
-//   console.log(`Fetching live match data for PUUID: ${puuid}`);
-//   const url = `https://na1.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${RIOT_API_KEY}`;
-//   console.log(`Request URL: ${url}`);
+exports.fetchLiveMatchData = async (puuid) => {
+  console.log(`Fetching live match data for PUUID: ${puuid}`);
+  const url = `https://na1.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${puuid}?api_key=${RIOT_API_KEY}`;
+  console.log(`Request URL: ${url}`);
 
-//   const response = await fetch(url);
-//   const responseBody = await response.text();
+  const response = await fetch(url);
+  const responseBody = await response.text();
 
-//   if (!response.ok) {
-//     console.error('Failed to fetch live match data', response.status, responseBody);
-//     throw new Error('Failed to fetch live match data');
-//   }
+  if (!response.ok) {
+    console.error('Failed to fetch live match data', response.status, responseBody);
+    throw new Error('Failed to fetch live match data');
+  }
 
-//   const data = JSON.parse(responseBody);
-//   console.log('Fetched live match data:', data);
-//   return data;
-// };
+  const data = JSON.parse(responseBody);
+  console.log('Fetched live match data:', data);
+  return data;
+};

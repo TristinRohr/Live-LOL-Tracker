@@ -91,31 +91,31 @@ exports.getUserStats = async (req, res) => {
   }
 };
 
-// exports.getLiveMatch = async (req, res) => {
-//   const { gameName, tagLine } = req.params;
+exports.getLiveMatch = async (req, res) => {
+  const { gameName, tagLine } = req.params;
 
-//   if (!gameName || !tagLine) {
-//     console.error('Invalid Riot ID format');
-//     return res.status(400).json({ error: 'Invalid Riot ID format' });
-//   }
+  if (!gameName || !tagLine) {
+    console.error('Invalid Riot ID format');
+    return res.status(400).json({ error: 'Invalid Riot ID format' });
+  }
 
-//   try {
-//     console.log(`Fetching PUUID for Riot ID: ${gameName}#${tagLine}`);
-//     const puuid = await riotApiService.fetchPuuidByRiotId(gameName, tagLine);
-//     console.log(`Fetched PUUID: ${puuid}`);
+  try {
+    console.log(`Fetching PUUID for Riot ID: ${gameName}#${tagLine}`);
+    const puuid = await riotApiService.fetchPuuidByRiotId(gameName, tagLine);
+    console.log(`Fetched PUUID: ${puuid}`);
 
-//     console.log(`Fetching live match data for PUUID: ${puuid}`);
-//     const liveMatchData = await riotApiService.fetchLiveMatchData(puuid);
-//     console.log('Fetched live match data:', liveMatchData);
+    console.log(`Fetching live match data for PUUID: ${puuid}`);
+    const liveMatchData = await riotApiService.fetchLiveMatchData(puuid);
+    console.log('Fetched live match data:', liveMatchData);
 
-//     res.json(liveMatchData);
-//   } catch (error) {
-//     if (error.response && error.response.status === 404) {
-//       console.error('No live match found:', error);
-//       res.status(404).json({ message: 'No live match found' });
-//     } else {
-//       console.error('Error fetching live match data:', error);
-//       res.status(500).json({ error: 'Failed to fetch live match data' });
-//     }
-//   }
-// };
+    res.json(liveMatchData);
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      console.error('No live match found:', error);
+      res.status(404).json({ message: 'No live match found' });
+    } else {
+      console.error('Error fetching live match data:', error);
+      res.status(500).json({ error: 'Failed to fetch live match data' });
+    }
+  }
+};

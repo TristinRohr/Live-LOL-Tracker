@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './UserStats.css';  // Import the CSS file
 
 const UserStats = ({ riotId }) => {
   const [userStats, setUserStats] = useState(null);
@@ -47,7 +48,7 @@ const UserStats = ({ riotId }) => {
   const profileIconUrl = `https://ddragon.leagueoflegends.com/cdn/14.14.1/img/profileicon/${userStats.profileIconId}.png`;
 
   return (
-    <div>
+    <div className="user-stats">
       <h2>User Stats</h2>
       <img src={profileIconUrl} alt="Profile Icon" style={{ width: '50px', height: '50px' }} />
       <p>Name: {userStats.name}</p>
@@ -55,112 +56,119 @@ const UserStats = ({ riotId }) => {
       <p>Game Name and Tagline: {riotId}</p>
 
       <h2>Match History</h2>
-      {matchHistory.map((match, index) => (
-        <div key={index}>
-          <p>Champion: {match.championName}</p>
-          <img src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${match.championName}.png`} alt={match.championName} />
-          <p>Win: {match.win ? 'Yes' : 'No'}</p>
-          <p>Kills: {match.kills}</p>
-          <p>Deaths: {match.deaths}</p>
-          <p>Assists: {match.assists}</p>
-          <p>Gold Earned: {match.goldEarned}</p>
-          <p>Total Damage Dealt: {match.totalDamageDealt}</p>
-          <p>Wards Placed: {match.wardsPlaced}</p>
-          <div>
-            <h3>Participants</h3>
-            {match.participants.map((participant, idx) => (
-              <div key={idx}>
-                <p>{participant.championName}</p>
-                <img src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${participant.championName}.png`} alt={participant.championName} />
-                <p>Kills: {participant.kills}</p>
-                <p>Deaths: {participant.deaths}</p>
-                <p>Assists: {participant.assists}</p>
-                <p>Gold Earned: {participant.goldEarned}</p>
-                <p>Total Damage Dealt: {participant.totalDamageDealt}</p>
-                <p>Wards Placed: {participant.wardsPlaced}</p>
-                <div>
-                  <h4>Items</h4>
-                  {participant.items.map((item, itemIdx) => (
-                    item !== 0 && (
-                      <img
-                        key={itemIdx}
-                        src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/item/${item}.png`}
-                        alt={`Item ${item}`}
-                        style={{ width: '32px', height: '32px', margin: '2px' }}
-                      />
-                    )
-                  ))}
+      <div className="flex-container">
+        {matchHistory.map((match, index) => (
+          <div key={index} className="match-card">
+            <div className="match-summary">
+              <p><strong>Champion:</strong> {match.championName}</p>
+              <img src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${match.championName}.png`} alt={match.championName} />
+              <p><strong>Win:</strong> {match.win ? 'Yes' : 'No'}</p>
+              <p><strong>K/D/A:</strong> {match.kills}/{match.deaths}/{match.assists}</p>
+            </div>
+            <div className="match-details">
+              <p><strong>Gold Earned:</strong> {match.goldEarned}</p>
+              <p><strong>Total Damage Dealt:</strong> {match.totalDamageDealt}</p>
+              <p><strong>Wards Placed:</strong> {match.wardsPlaced}</p>
+              <h4>Participants</h4>
+              {match.participants.map((participant, idx) => (
+                <div key={idx} className={`participant ${participant.puuid === match.puuid ? 'highlight' : ''}`}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span>{participant.championName}</span>
+                    <img src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${participant.championName}.png`} alt={participant.championName} style={{ marginLeft: '10px' }} />
+                  </div>
+                  <div>
+                    <p><strong>K/D/A:</strong> {participant.kills}/{participant.deaths}/{participant.assists}</p>
+                    <p><strong>Gold Earned:</strong> {participant.goldEarned}</p>
+                    <p><strong>Total Damage Dealt:</strong> {participant.totalDamageDealt}</p>
+                    <p><strong>Wards Placed:</strong> {participant.wardsPlaced}</p>
+                    <div>
+                      <h4>Items</h4>
+                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {participant.items.map((item, itemIdx) => (
+                          item !== 0 && (
+                            <img
+                              key={itemIdx}
+                              src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/item/${item}.png`}
+                              alt={`Item ${item}`}
+                              style={{ width: '32px', height: '32px', margin: '2px' }}
+                            />
+                          )
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <h2>Live Match</h2>
       {liveMatchError ? (
         <div>{liveMatchError}</div>
       ) : (
         liveMatch && (
-          <div>
-            <p>Game Mode: {liveMatch.gameData.gameMode}</p>
-            <p>Game Time: {liveMatch.gameData.gameTime}</p>
-            <p>Map Name: {liveMatch.gameData.mapName}</p>
-            <p>Map Terrain: {liveMatch.gameData.mapTerrain}</p>
-            <div>
-              <h3>Active Player</h3>
-              <p>Summoner Name: {liveMatch.activePlayer.summonerName}</p>
-              <p>Level: {liveMatch.activePlayer.level}</p>
-              <p>Current Gold: {liveMatch.activePlayer.currentGold}</p>
-              <p>Current Health: {liveMatch.activePlayer.championStats.currentHealth}</p>
-              <p>Max Health: {liveMatch.activePlayer.championStats.maxHealth}</p>
-              <p>Ability Power: {liveMatch.activePlayer.championStats.abilityPower}</p>
-              <p>Attack Damage: {liveMatch.activePlayer.championStats.attackDamage}</p>
-              <p>Armor: {liveMatch.activePlayer.championStats.armor}</p>
-              <p>Magic Resist: {liveMatch.activePlayer.championStats.magicResist}</p>
-              <p>Move Speed: {liveMatch.activePlayer.championStats.moveSpeed}</p>
+          <div className="live-match">
+            <p><strong>Game Mode:</strong> {liveMatch.gameData.gameMode}</p>
+            <p><strong>Game Time:</strong> {liveMatch.gameData.gameTime}</p>
+            <p><strong>Map Name:</strong> {liveMatch.gameData.mapName}</p>
+            <div className="live-match-details">
               <div>
-                <h4>Abilities</h4>
-                {Object.entries(liveMatch.activePlayer.abilities).map(([key, ability], idx) => (
-                  <div key={idx}>
-                    <p>{key}: {ability.displayName} (Level: {ability.abilityLevel})</p>
+                <h3>Active Player</h3>
+                <p>Summoner Name: {liveMatch.activePlayer.summonerName}</p>
+                <p>Level: {liveMatch.activePlayer.level}</p>
+                <p>Current Gold: {liveMatch.activePlayer.currentGold}</p>
+                <p>Current Health: {liveMatch.activePlayer.championStats.currentHealth}</p>
+                <p>Max Health: {liveMatch.activePlayer.championStats.maxHealth}</p>
+                <p>Ability Power: {liveMatch.activePlayer.championStats.abilityPower}</p>
+                <p>Attack Damage: {liveMatch.activePlayer.championStats.attackDamage}</p>
+                <p>Armor: {liveMatch.activePlayer.championStats.armor}</p>
+                <p>Magic Resist: {liveMatch.activePlayer.championStats.magicResist}</p>
+                <p>Move Speed: {liveMatch.activePlayer.championStats.moveSpeed}</p>
+                <div>
+                  <h4>Abilities</h4>
+                  {Object.entries(liveMatch.activePlayer.abilities).map(([key, ability], idx) => (
+                    <div key={idx}>
+                      <p>{key}: {ability.displayName} (Level: {ability.abilityLevel})</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-container">
+                <h3>All Players</h3>
+                {liveMatch.allPlayers.map((player, idx) => (
+                  <div key={idx} className="player-card">
+                    <p>Player: {player.summonerName}</p>
+                    <p>Champion: {player.championName}</p>
+                    <p>Level: {player.level}</p>
+                    <p>Kills: {player.scores.kills}</p>
+                    <p>Deaths: {player.scores.deaths}</p>
+                    <p>Assists: {player.scores.assists}</p>
+                    <p>CS: {player.scores.creepScore}</p>
+                    <div>
+                      <h4>Items</h4>
+                      {player.items.map((item, itemIdx) => (
+                        <img
+                          key={itemIdx}
+                          src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/item/${item.itemID}.png`}
+                          alt={`Item ${item.itemID}`}
+                          style={{ width: '32px', height: '32px', margin: '2px' }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
-            <div>
-              <h3>All Players</h3>
-              {liveMatch.allPlayers.map((player, idx) => (
-                <div key={idx}>
-                  <p>Player: {player.summonerName}</p>
-                  <p>Champion: {player.championName}</p>
-                  <p>Level: {player.level}</p>
-                  <p>Kills: {player.scores.kills}</p>
-                  <p>Deaths: {player.scores.deaths}</p>
-                  <p>Assists: {player.scores.assists}</p>
-                  <p>CS: {player.scores.creepScore}</p>
-                  <div>
-                    <h4>Items</h4>
-                    {player.items.map((item, itemIdx) => (
-                      <img
-                        key={itemIdx}
-                        src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/item/${item.itemID}.png`}
-                        alt={`Item ${item.itemID}`}
-                        style={{ width: '32px', height: '32px', margin: '2px' }}
-                      />
-                    ))}
+              <div className="event-details">
+                <h3>Events</h3>
+                {liveMatch.events.Events.map((event, idx) => (
+                  <div key={idx} className="event-card">
+                    <p><strong>Event Name:</strong> {event.EventName}</p>
+                    <p><strong>Event Time:</strong> {event.EventTime}</p>
                   </div>
-                </div>
-              ))}
-            </div>
-            <div>
-              <h3>Events</h3>
-              {liveMatch.events.Events.map((event, idx) => (
-                <div key={idx}>
-                  <p>Event Name: {event.EventName}</p>
-                  <p>Event Time: {event.EventTime}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )

@@ -11,7 +11,8 @@ const ChampionImages = () => {
         const response = await axios.get('https://ddragon.leagueoflegends.com/cdn/14.14.1/data/en_US/champion.json');
         setChampions(Object.values(response.data.data));
       } catch (error) {
-        setError('Failed to fetch champion data');
+        console.error('Error fetching champion data:', error); // Log error
+        setError('Failed to fetch champion data. Please try again later.');
       }
     };
 
@@ -31,6 +32,7 @@ const ChampionImages = () => {
               src={`https://ddragon.leagueoflegends.com/cdn/14.14.1/img/champion/${champion.image.full}`}
               alt={champion.name}
               style={{ width: '50px', height: '50px' }}
+              loading="lazy" // Lazy load images
             />
             <p>{champion.name}</p>
           </div>
